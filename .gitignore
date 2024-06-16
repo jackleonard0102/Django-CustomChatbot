@@ -1,0 +1,82 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.sqlite3-journal
+*.sql
+*.sqlite
+.DS_Store
+*.migrations/
+
+# If your project includes a virtual environment
+venv/
+.venv/
+ENV/
+env/
+ENV.bak/
+venv.bak/
+
+# Pyenv
+.python-version
+
+# Django local settings
+local_settings.py
+
+# Database files
+*.db
+*.sqlite3
+
+# Static files
+/static/
+media/
+
+# Testing
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+.tox/
+nosetests.xml
+coverage/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Environment variables
+.env

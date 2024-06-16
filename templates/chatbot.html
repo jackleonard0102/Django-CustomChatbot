@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+<style>
+  body,
+  html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .chat-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+
+  .messages-box {
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 70px; /* Account for navbar height */
+    padding: 20px;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .messages-list {
+    padding-left: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .message {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: flex-start;
+    max-width: 80%;
+  }
+
+  .message.sent {
+    align-self: flex-end;
+  }
+
+  .message.received {
+    align-self: flex-start;
+  }
+
+  .message-text {
+    padding: 10px 15px;
+    border-radius: 20px;
+    background-color: #f1f0f0;
+    position: relative;
+    display: inline-block;
+  }
+
+  .message.sent .message-text {
+    background-color: #dcf8c6;
+    border-top-right-radius: 0;
+  }
+
+  .message.received .message-text {
+    background-color: #f1f0f0;
+    border-top-left-radius: 0;
+  }
+
+  .message-sender {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .message-time {
+    font-size: 0.8em;
+    color: #999;
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+  }
+
+  .message-icons {
+    font-size: 0.8em;
+    color: #999;
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+  }
+
+  .message-icons i {
+    margin-right: 5px;
+    cursor: pointer;
+  }
+
+  .message-form {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 20px;
+    background-color: white;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+
+  .message-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin-right: 10px;
+    outline: none;
+  }
+
+  .btn-send {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-send i {
+    font-size: 20px;
+  }
+
+  .btn-send:hover {
+    background-color: #0056b3;
+  }
+
+  .welcome-banner {
+    font-size: 16px;
+    color: yellow;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+  <div class="navbar">
+    <div>Chat</div>
+    {% if user.is_authenticated %}
+    <div class="welcome-banner">
+      Welcome, {{user.username}} <a style="color: yellow;" href="logout">Logout</a>
+    </div>
+    {% else %}
+    <div class="welcome-banner">
+      <a style="color: yellow;" href="login">Login</a> <a style="color: yellow;" href="register">Register</a>
+    </div>
+    {% endif %}
+  </div>
+  <div class="messages-box" id="messagesBox">
+    <ul class="messages-list">
+      {% for chat in chats %}
+      {% if chat.user == request.user %}
+      <li class="message sent">
+        <div class="message-text">
+          <div class="message-sender">You</div>
+          <div class="message-content">{{chat.message}}</div>
+          <div class="message-time">{{chat.timestamp}}</div>
+        </div>
+      </li>
+      <li class="message received">
+        <div class="message-text">
+          <div class="message-sender">AI Chatbot</div>
+          <div class="message-content">{{chat.response}}</div>
+          <div class="message-time">{{chat.timestamp}}</div>
+          <div class="message-icons">
+            <i class="far fa-thumbs-up"></i>
+            <i class="far fa-thumbs-down"></i>
+          </div>
+        </div>
+      </li>
+      {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+  <form class="message-form" id="messageForm">
+    {% csrf_token %}
+    <input type="text" class="message-input" placeholder="Ask me anything..." id="messageInput">
+    <button type="submit" class="btn-send"><i class="fas fa-paper-plane"></i></button>
+  </form>
+</div>
+
+<script>
+  // Auto-scroll to the latest message
+  const messagesBox = document.getElementById('messagesBox');
+  function scrollToBottom() {
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+  }
+  scrollToBottom();
+
+  // Handle form submission
+  const messageForm = document.getElementById('messageForm');
+  const messageInput = document.getElementById('messageInput');
+
+  messageForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const message = messageInput.value.trim();
+    if (!message) return;
+
+    // Add the message to the chat window
+    const messageItem = document.createElement('li');
+    messageItem.classList.add('message', 'sent');
+    messageItem.innerHTML = `
+      <div class="message-text">
+        <div class="message-sender">You</div>
+        <div class="message-content">${message}</div>
+        <div class="message-time">${new Date().toLocaleTimeString()}</div>
+      </div>`;
+    document.querySelector('.messages-list').appendChild(messageItem);
+
+    // Clear input field
+    messageInput.value = '';
+
+    // Scroll to the latest message
+    scrollToBottom();
+
+    // Send the message to the server
+    fetch('', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        'message': message
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Display the response
+      const responseItem = document.createElement('li');
+      responseItem.classList.add('message', 'received');
+      responseItem.innerHTML = `
+        <div class="message-text">
+          <div class="message-sender">AI Chatbot</div>
+          <div class="message-content">${data.response}</div>
+          <div class="message-time">${new Date().toLocaleTimeString()}</div>
+          <div class="message-icons">
+            <i class="far fa-thumbs-up"></i>
+            <i class="far fa-thumbs-down"></i>
+          </div>
+        </div>`;
+      document.querySelector('.messages-list').appendChild(responseItem);
+      // Scroll to the latest message
+      scrollToBottom();
+    });
+  });
+</script>
+
+<!-- FontAwesome icons for thumbs up and thumbs down -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+{% endblock %}

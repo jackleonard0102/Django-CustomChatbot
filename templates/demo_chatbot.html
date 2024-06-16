@@ -1,0 +1,117 @@
+{% extends 'base.html' %} {% block styles %}
+<style>
+  body,
+  html {
+    height: 100%;
+  }
+
+  .messages-box {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .messages-list {
+    padding-left: 0;
+  }
+
+  .message {
+    margin-bottom: 15px;
+  }
+</style>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+{% endblock %} {% block content %}
+<div class="flex flex-col h-screen">
+  <div class="flex-grow bg-white overflow-hidden">
+    <div class="bg-blue-600 text-white p-4">
+      <h1 class="text-xl">Chat</h1>
+      {% if user.is_authenticated %}
+      <div class="flex justify-between items-center">
+        <b>Welcome, {{user.username}}</b>
+        <a class="text-yellow-300" href="logout">Logout</a>
+      </div>
+      {% else %}
+      <div class="flex justify-between items-center">
+        <a class="text-yellow-300" href="login">Login</a>
+        <a class="text-yellow-300" href="register">Register</a>
+      </div>
+      {% endif %}
+    </div>
+    <div class="messages-box p-4">
+      <ul class="messages-list list-none">
+        {% for chat in chats %} {% if chat.user == request.user %}
+        <li class="message sent flex justify-end mb-4">
+          <div class="message-text bg-green-200 p-3 rounded-lg w-1/2">
+            <div class="message-sender font-bold">You</div>
+            <div class="message-content">{{chat.message}}</div>
+          </div>
+        </li>
+        <li class="message received flex justify-start mb-4">
+          <div class="message-text bg-gray-200 p-3 rounded-lg w-1/2">
+            <div class="message-sender font-bold">AI Chatbot</div>
+            <div class="message-content">{{chat.response}}</div>
+          </div>
+        </li>
+        {% endif %} {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <form class="message-form w-full p-4 bg-gray-200 flex items-center space-x-4">
+    {%csrf_token%}
+    <input type="text" class="message-input flex-grow p-3 rounded-lg border border-gray-300" placeholder="Type your message..." />
+    <button type="submit" class="btn-send bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700">Send</button>
+  </form>
+</div>
+
+<script>
+  const messagesList = document.querySelector(".messages-list");
+  const messageForm = document.querySelector(".message-form");
+  const messageInput = document.querySelector(".message-input");
+
+  messageForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const message = messageInput.value.trim();
+    if (message.length === 0) {
+      return;
+    }
+
+    const messageItem = document.createElement("li");
+    messageItem.classList.add("message", "sent", "flex", "justify-end", "mb-4");
+    messageItem.innerHTML = `
+      <div class="message-text bg-green-200 p-3 rounded-lg w-1/2">
+        <div class="message-sender font-bold">You</div>
+        <div class="message-content">
+          ${message}
+        </div>
+      </div>`;
+    messagesList.appendChild(messageItem);
+
+    messageInput.value = "";
+
+    fetch("", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        csrfmiddlewaretoken: document.querySelector(
+          "[name=csrfmiddlewaretoken]"
+        ).value,
+        message: message,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const response = data.response;
+        const messageItem = document.createElement("li");
+        messageItem.classList.add("message", "received", "flex", "justify-start", "mb-4");
+        messageItem.innerHTML = `
+        <div class="message-text bg-gray-200 p-3 rounded-lg w-1/2">
+          <div class="message-sender font-bold">AI Chatbot</div>
+          <div class="message-content">
+            ${response}
+          </div>
+        </div>`;
+        messagesList.appendChild(messageItem);
+      });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - KeyLevels{% endblock %}
+
+{% block styles %}
+<style>
+  .gradient-text {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  body {
+    padding-top: 72px; /* Adjust based on the height of the navbar */
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="p-4 fixed w-full top-0 left-0 bg-white shadow z-50 transition-colors duration-300">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex justify-between items-center">
+      <div>
+        <a href="#" class="text-blue-600 text-xl font-semibold">KeyLevels</a>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="#" class="text-gray-900 font-semibold">Product</a>
+        <a href="#demo" class="text-gray-900 font-semibold">Demo</a>
+        <a href="/login" class="text-gray-900 font-semibold">Login</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="text-center hero py-20 bg-white transition-colors duration-300">
+  <div class="max-w-6xl mx-auto px-4">
+    <h1 class="text-5xl font-semibold mb-4 gradient-text">Unleash the Power of AI</h1>
+    <p class="text-lg font-semibold mb-8 text-gray-700 ">Transform your business with AI-powered chatbots.</p>
+    <a href="/register" class="bg-blue-600 text-white py-2 px-6 rounded-full font-semibold hover:bg-blue-500">Get Started</a>
+  </div>
+</section>
+
+<section class="features py-20 bg-gray-50 transition-colors duration-300">
+  <div class="max-w-6xl mx-auto px-4">
+    <h2 class="text-3xl font-semibold mb-12 text-center gradient-text">Key Features</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="feature-card bg-white  p-6 rounded-lg shadow transition-colors duration-300">
+        <div class="icon bg-blue-500 text-white rounded-full p-4 mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l-2 2m0 0L5 8M7 8h10m0 0l-2 2m0 0L15 6v13m4-6a8 8 0 11-16 0 8 8 0 0116 0z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2 text-gray-900 ">ChatGPT Integration</h3>
+        <p class="text-gray-700">Harness the power of OpenAI's ChatGPT to create intelligent chatbots.</p>
+      </div>
+      <div class="feature-card bg-white p-6 rounded-lg shadow transition-colors duration-300">
+        <div class="icon bg-blue-500 text-white rounded-full p-4 mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2 text-gray-900 ">Customizable</h3>
+        <p class="text-gray-700">Tailor the chatbot's responses and behavior to suit your specific needs.</p>
+      </div>
+      <div class="feature-card bg-white p-6 rounded-lg shadow transition-colors duration-300">
+        <div class="icon bg-blue-500 text-white rounded-full p-4 mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2 text-gray-900">User-Friendly Interface</h3>
+        <p class="text-gray-700">An intuitive UI that ensures a seamless user experience.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing Section -->
+<section id="pricing" class="bg-gray-50 py-12 transition-colors duration-300">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-semibold mb-12 text-center gradient-text">Pricing</h2>
+    <div class="mt-10 flex justify-center">
+      <div class="bg-gray-50 p-6 rounded-lg shadow w-full md:w-1/3">
+        <h3 class="text-xl font-bold text-gray-900">Subscription Plan</h3>
+        <p class="mt-4 text-gray-600">$38 per month</p>
+        <a
+          href="/register"
+          class="mt-6 block bg-blue-500 text-white text-center font-semibold py-2 rounded-md"
+          >Sign Up</a
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- demo chatbot section-->
+<section id="demo" class="bg-gray-50 py-12 transition-colors duration-300">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-center">
+      <h2 class="text-3xl font-semibold mb-12 mr-2 text-center gradient-text">Demo Chatbot</h2>
+    <div class="animate-bounce bg-white p-2 ml-2 w-10 h-10 ring-1 ring-slate-900/5 border rounded-full flex items-center justify-center">
+      <svg class="w-6 h-6 text-violet-500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+        <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+      </svg>
+    </div>
+    </div>
+    <div class="mt-10 bg-white p-6 rounded-lg shadow transition-colors duration-300">
+      <form id="demoForm">
+        <div class="mb-4">
+          <label for="companyName" class="block text-gray-700 ">Company Name</label>
+          <input type="text" id="companyName" name="companyName" class="placeholder-gray-200 mt-1 py-2 block w-full border rounded-md shadow-sm">
+        </div>
+        <div class="mb-4">
+          <label for="jobRole" class="block text-gray-700 ">Job Role</label>
+          <input type="text" id="jobRole" name="jobRole" class="placeholder-gray-200 mt-1 py-2 block w-full border rounded-md shadow-sm">
+        </div>
+        <div class="mb-4">
+          <label for="candidateName" class="block text-gray-700 ">Candidate Name</label>
+          <input type="text" id="candidateName" name="candidateName" class="placeholder-gray-200 mt-1 py-2 block w-full border rounded-md shadow-sm">
+        </div>
+        <div class="mb-4">
+          <label for="difficulty" class="block text-gray-700">Difficulty</label>
+          <select id="difficulty" name="difficulty" class="mt-1 p-2 block w-full border rounded-md shadow-sm">
+            <option value="easy">Easy</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <button type="button" class="bg-blue-500 text-white py-2 px-4 rounded-md font-semibold" onclick="generateChatbot()">Generate</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
